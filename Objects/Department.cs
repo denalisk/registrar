@@ -62,6 +62,44 @@ namespace Registrar
             return allDepartments;
         }
 
+        public static Department Find(int id)
+        {
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("SELECT * FROM departments WHERE id = @DepartmentId;", conn);
+            cmd.Parameters.Add(new SqlParameter("@DepartmentId", id));
+
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+            int foundId = 0;
+            string foundName = null;
+
+
+            while(rdr.Read())
+            {
+                foundId = rdr.GetInt32(0);
+                foundName = rdr.GetString(1);
+
+            }
+
+            DB.CloseSqlConnection(conn, rdr);
+
+            return new Department(foundName, foundId);
+        }
+
+        public static void Delete(int id)
+        {
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("DELETE FROM departments WHERE id=@DepartmentId;", conn);
+            cmd.Parameters.Add(new SqlParameter("@DepartmentId", id));
+
+            cmd.ExecuteNonQuery();
+            DB.CloseSqlConnection(conn);
+        }
+
         public static void DeleteAll()
         {
             SqlConnection conn = DB.Connection();

@@ -38,15 +38,30 @@ namespace Registrar
             Assert.Equal(expectedList, actualList);
         }
         [Fact]
-        public void Department_EmptyOnLoad_2()
+        public void Department_Find_ReturnDepartmentObject()
         {
-            // Arrange
-            // Act
-            // Assert
+            Department newDepartment = new Department("English");
+            newDepartment.Save();
+
+            Department foundDepartment = Department.Find(newDepartment.GetId());
+
+            Assert.Equal(newDepartment, foundDepartment);
+        }
+        [Fact]
+        public void Department_Delete_RemoveFromDatabase()
+        {
+            Department newDepartment = new Department("English");
+            newDepartment.Save();
+
+            Department.Delete(newDepartment.GetId());
+
+            Assert.Equal(0, Department.GetAll().Count);
         }
 
         public void Dispose()
         {
+            Course.DeleteAll();
+            Student.DeleteAll();
             Department.DeleteAll();
         }
     }

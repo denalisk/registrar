@@ -106,6 +106,42 @@ namespace Registrar
             return new Student(foundName, foundEnrollmentDate, foundDeptId, foundId);
         }
 
+        public void AddCourse(int id)
+        {
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("INSERT INTO students_courses (student_id, course_id) VALUES (@StudentId, @CourseId);", conn);
+
+            cmd.Parameters.Add(new SqlParameter("@StudentId", this.GetId()));
+            cmd.Parameters.Add(new SqlParameter("@CourseId", id));
+
+            cmd.ExecuteNonQuery();
+
+            DB.CloseSqlConnection(conn);
+        }
+
+        public List<Course> GetCourses()
+        {
+            List<Course> studentCourses = new List<Course>();
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("SELECT courses.* FROM courses JOIN students_courses ON (courses.id = students_courses.course_id) JOIN students ON (students.id = students_courses.student_id) WHERE students.id = @StudentId;", conn);
+
+            cmd.Parameters.Add(new SqlParameter("@StudentId", this.GetId()));
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+            while(rdr.Read())
+            {
+                studentCourses.Add(new Course(rdr.GetString(1), rdr.GetString(2), rdr.GetInt32(3), rdr.GetInt32(0)));
+            }
+
+            DB.CloseSqlConnection(conn, rdr);
+
+            return studentCourses;
+        }
+
         public static void Delete(int id)
         {
             SqlConnection conn = DB.Connection();

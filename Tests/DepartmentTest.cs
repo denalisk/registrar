@@ -116,13 +116,6 @@ namespace Registrar
             List<Student> expected = new List<Student>{otherStudent};
             List<Student> actual = newDepartment.CheckMissingRequirements();
 
-            foreach(Student student in actual)
-            {
-                Console.WriteLine(student.GetName());
-            }
-
-
-
             Assert.Equal(expected, actual);
 
         }

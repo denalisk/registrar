@@ -136,7 +136,7 @@ namespace Registrar
             SqlConnection conn = DB.Connection();
             conn.Open();
 
-            SqlCommand cmd = new SqlCommand("SELECT students.* FROM students JOIN students_courses ON (students.id = students_courses.student_id) JOIN courses ON (courses.id = students_courses.course_id) WHERE courses.dept_id != @DeptId", conn);
+            SqlCommand cmd = new SqlCommand("SELECT DISTINCT students.* FROM students LEFT JOIN students_courses ON (students.id = students_courses.student_id) LEFT JOIN courses ON (courses.id = students_courses.course_id) WHERE students.dept_id != @DeptId;", conn);
             cmd.Parameters.Add(new SqlParameter("@DeptId", this.GetId()));
 
             SqlDataReader rdr = cmd.ExecuteReader();

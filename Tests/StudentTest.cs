@@ -72,7 +72,7 @@ namespace Registrar
 
             newStudent.AddCourse(newCourse.GetId());
 
-            List<Student> actual =Course.GetByCourse(newCourse.GetId());
+            List<Student> actual = Course.GetByCourse(newCourse.GetId());
 
             Assert.Equal(expected[0].GetName(), actual[0].GetName());
         }
@@ -94,6 +94,48 @@ namespace Registrar
 
             List<Course> actual = newStudent.GetCourses();
 
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Student_AddGradeToCourse()
+        {
+            Student newStudent = new Student("Johnny English", "2001-09-21", 1);
+            newStudent.Save();
+
+            Course newCourse = new Course("English 101", "ENG101", 1);
+            newCourse.Save();
+            string expected = "A";
+            newStudent.AddCourse(newCourse.GetId());
+
+            newStudent.UpdateCourseGrade(newCourse.GetId(), expected);
+            string actual = newStudent.GetCourseGrade(newCourse.GetId());
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Student_GetCompletedCourses()
+        {
+            Student newStudent = new Student("Johnny English", "2001-09-21", 1);
+            newStudent.Save();
+
+            Course newCourse = new Course("English 101", "ENG101", 1);
+            newCourse.Save();
+            Course secondCourse = new Course("French 101", "FRN101", 1);
+            secondCourse.Save();
+            Course thirdCourse = new Course("Spanish 101", "SPAN101", 1);
+            thirdCourse.Save();
+            newStudent.AddCourse(newCourse.GetId());
+            newStudent.AddCourse(secondCourse.GetId());
+            newStudent.AddCourse(thirdCourse.GetId());
+
+            newStudent.UpdateCourseGrade(newCourse.GetId(), "A");
+            newStudent.UpdateCourseGrade(secondCourse.GetId(), "B");
+
+            List<Course> expected = new List<Course> {newCourse, secondCourse};
+            List<Course> actual = newStudent.GetCompletedCourses();
 
             Assert.Equal(expected, actual);
         }

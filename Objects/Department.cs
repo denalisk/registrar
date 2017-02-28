@@ -88,6 +88,68 @@ namespace Registrar
             return new Department(foundName, foundId);
         }
 
+        public static List<Student> GetStudents(int id)
+        {
+            List<Student> studentsInDept = new List<Student> {};
+
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("SELECT * FROM students WHERE dept_id = @DeptId;", conn);
+            cmd.Parameters.Add(new SqlParameter("@DeptId", id));
+
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+            while(rdr.Read())
+            {
+                studentsInDept.Add(new Student(rdr.GetString(1), rdr.GetString(2), rdr.GetInt32(3), rdr.GetInt32(0)));
+            }
+
+            DB.CloseSqlConnection(conn, rdr);
+            return studentsInDept;
+        }
+
+        public static List<Course> GetCourses(int id)
+        {
+            List<Course> coursesInDept = new List<Course> {};
+
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("SELECT * FROM courses WHERE dept_id = @DeptId;", conn);
+            cmd.Parameters.Add(new SqlParameter("@DeptId", id));
+
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+            while(rdr.Read())
+            {
+                coursesInDept.Add(new Course(rdr.GetString(1), rdr.GetString(2), rdr.GetInt32(3), rdr.GetInt32(0)));
+            }
+
+            DB.CloseSqlConnection(conn, rdr);
+            return coursesInDept;
+        }
+
+        public List<Student> CheckMissingRequirements()
+        {
+            List<Student> foundStudents = new List<Student>();
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("SELECT students.* FROM students JOIN students_courses ON (students.id = students_courses.student_id) JOIN courses ON (courses.id = students_courses.course_id) WHERE courses.dept_id != @DeptId", conn);
+            cmd.Parameters.Add(new SqlParameter("@DeptId", this.GetId()));
+
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+            while (rdr.Read())
+            {
+                foundStudents.Add(new Student(rdr.GetString(1), rdr.GetString(2), rdr.GetInt32(3), rdr.GetInt32(0)));
+            }
+
+            DB.CloseSqlConnection(conn, rdr);
+            return foundStudents;
+        }
+
         public static void Delete(int id)
         {
             SqlConnection conn = DB.Connection();

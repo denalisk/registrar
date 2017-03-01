@@ -1,0 +1,98 @@
+@{
+    Layout = "Shared/_Layout.cshtml";
+}
+
+@if(Model["Students"].Count == 0)
+{
+    <p>There are no students listed</p>
+}
+else
+{
+    <div class="student-list">
+        <div class="row">
+            @foreach(var student in Model["Students"])
+            {
+                <div class="row">
+                    <div class="col s6">
+                        <a class="clickable-student" href="#"><h4>@student.GetName()</h4></a>
+                        <button type="button" class="btn change-major-btn">Change Major</button>
+                        <button type="button" class="btn add-class-btn">Add Class</button>
+                        <div class="hidden">
+                            <form class="" action="/students/@student.GetId()" method="post">
+                                <select class="" name="course-id">
+                                    @if(Model["Courses"].Count == 0)
+                                    {
+                                        <option value="0" disabled>There are no courses available</option>
+                                    }
+                                    else
+                                    {
+                                        @foreach(var course in Model["Courses"])
+                                        {
+                                            <option value="@course.GetId()">@course.GetName()</option>
+                                        }
+                                    }
+                                </select>
+                                <button class="btn" type="submit" name="button">Add Course</button>
+                            </form>
+                        </div>
+
+
+                        <div class="hidden">
+                            <form class="" action="/students/@student.GetId()" method="post">
+                                <input type="hidden" name="_method" value="PATCH">
+                                <select class="" name="course-grade">
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="F">F</option>
+                                </select>
+                                <select class="" name="course-id">
+                                    @if(student.GetCourses().Count == 0)
+                                    {
+                                        <option value="0" disabled>There are no courses available</option>
+                                    }
+                                    else
+                                    {
+                                        @foreach(var course in student.GetCourses())
+                                        {
+                                            <option value="@course.GetId()">@course.GetName()</option>
+                                        }
+                                    }
+                                </select>
+                                <button class="btn" type="submit" name="button">Update Grade</button>
+                            </form>
+                        </div>
+
+
+
+
+                    </div>
+                    <div class="col s6 hidden">
+                        <h6>Major: @student.GetMajor()</h6>
+                        <hr />
+                        <p>Courses<p>
+                        @if(student.GetCourses().Count == 0)
+                        {
+                            <p>There are no courses listed</p>
+                        }
+                        else
+                        {
+                            @foreach(var course in student.GetCourses())
+                            {
+                                <p>Course Name: @course.GetName()</p>
+                                <p>Course Grade: @student.GetCourseGrade(course.GetId())</p>
+                                <hr />
+                            }
+                        }
+
+                        <form class="" action="/students/@student.GetId()/course/@student.GetId()" method="post">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="Submit" name="button">Delete Course</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

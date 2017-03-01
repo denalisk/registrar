@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Registrar</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
+        <script src="/Content/js/jquery-3.1.1.js" charset="utf-8"></script>
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+      <script src="/Content/js/scripts.js" charset="utf-8"></script>
+    </head>
+    <body>
+        <div class="row">
+            <div class="col s4">
+                <a href="/students">Student View</a>
+                <a href="/">Department View</a>
+                <div class="department-form">
+                    <form class="" action="/add-department" method="post">
+                        <input type="text" name="department-name" placeholder="Department Name">
+                        <button class="btn" type="submit" name="button">Add Department</button>
+                    </form>
+
+                </div>
+                <div class="course-form">
+                    <form class="" action="/add-course" method="post">
+                        <input type="text" name="course-name" placeholder="Course Name">
+                        <input type="text" name="course-number" placeholder="Course Number" maxlength="10">
+                        <select class="" name="department-id">
+                            @if(Model["Departments"].Count == 0)
+                            {
+                                <option value="0" disabled>Please Create A Department</option>
+                            }
+                            else
+                            {
+                                @foreach (var department in Model["Departments"])
+                                {
+                                    <option value="@department.GetId()">@department.GetName()</option>
+                                }
+                            }
+                        </select>
+                        <button class="btn" type="submit" name="button">Add Course</button>
+                    </form>
+                </div>
+                <div class="student-form">
+                    <form class="" action="/add-student" method="post">
+                        <input type="text" name="student-name" placeholder="Student Name">
+                        <input type="date" name="enrollment-date">
+                        <select class="" name="department-id">
+                            <option value="0">No Department</option>
+                            @if(Model["Departments"].Count != 0)
+                            {
+                                @foreach (var department in Model["Departments"])
+                                {
+                                    <option value="@department.GetId()">@department.GetName()</option>
+                                }
+                            }
+                        </select>
+                        <button class="btn" type="submit" name="button">Add Student</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col s8">
+                @RenderBody()
+            </div>
+        </div>
+    </body>
+</html>

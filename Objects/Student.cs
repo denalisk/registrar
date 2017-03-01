@@ -78,6 +78,11 @@ namespace Registrar
             return allStudents;
         }
 
+        public string GetMajor()
+        {
+            return Department.Find(this.GetDeptId()).GetName();
+        }
+
         public void UpdateCourseGrade(int id, string grade)
         {
             SqlConnection conn = DB.Connection();
@@ -183,6 +188,19 @@ namespace Registrar
 
             cmd.ExecuteNonQuery();
 
+            DB.CloseSqlConnection(conn);
+        }
+
+        public void DeleteCourse(int id)
+        {
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("DELETE FROM students_courses WHERE course_id=@CourseId AND student_id=@StudentId;", conn);
+            cmd.Parameters.Add(new SqlParameter("@CourseId", id));
+            cmd.Parameters.Add(new SqlParameter("@StudentId", this.GetId()));
+
+            cmd.ExecuteNonQuery();
             DB.CloseSqlConnection(conn);
         }
 

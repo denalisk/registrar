@@ -1,0 +1,29 @@
+@{
+    Layout="Shared/_Layout.cshtml";
+}
+
+@if(Model["Departments"].Count == 0)
+{
+    <p>There are not departments listed</p>
+}
+else
+{
+    @foreach(var department in Model["Departments"])
+    {
+        <p>@department.GetName()</p>
+    }
+}
+
+<hr />
+
+@if(Model["Courses"].Count == 0)
+{
+    <p>There are not courses listed</p>
+}
+else
+{
+    @foreach(var course in Model["Courses"])
+    {
+        <p>@course.GetName()</p>
+    }
+}

@@ -10,9 +10,14 @@ else
 {
     @foreach(var department in Model["Departments"])
     {
-        <p>@department.GetName()</p>
+        <h4>@department.GetName()</h4>
+        <ul>
+            <li>Number of courses: @department.GetDepartmentCourses().Count</li>
+            <li>Affiliated Students: @department.GetDepartmentStudents().Count</li>
+        </ul>
     }
 }
+
 
 <hr />
 
@@ -24,6 +29,15 @@ else
 {
     @foreach(var course in Model["Courses"])
     {
-        <p>@course.GetName()</p>
+        <h5>@course.GetName()</h5>
+        <p>Students Enrolled: @course.GetCourseStudents().Count</p>
+        <h6>Student Names:</h6>
+        <ul>
+            @foreach(var student in course.GetCourseStudents())
+            {
+                <li>@student.GetName()</li>
+            }
+        </ul>
+        <hr />
     }
 }

@@ -108,6 +108,26 @@ namespace Registrar
             DB.CloseSqlConnection(conn, rdr);
             return studentsInDept;
         }
+        public List<Student> GetDepartmentStudents()
+        {
+            List<Student> studentsInDept = new List<Student> {};
+
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("SELECT * FROM students WHERE dept_id = @DeptId;", conn);
+            cmd.Parameters.Add(new SqlParameter("@DeptId", this.GetId()));
+
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+            while(rdr.Read())
+            {
+                studentsInDept.Add(new Student(rdr.GetString(1), rdr.GetString(2), rdr.GetInt32(3), rdr.GetInt32(0)));
+            }
+
+            DB.CloseSqlConnection(conn, rdr);
+            return studentsInDept;
+        }
 
         public static List<Course> GetCourses(int id)
         {
@@ -118,6 +138,27 @@ namespace Registrar
 
             SqlCommand cmd = new SqlCommand("SELECT * FROM courses WHERE dept_id = @DeptId;", conn);
             cmd.Parameters.Add(new SqlParameter("@DeptId", id));
+
+            SqlDataReader rdr = cmd.ExecuteReader();
+
+            while(rdr.Read())
+            {
+                coursesInDept.Add(new Course(rdr.GetString(1), rdr.GetString(2), rdr.GetInt32(3), rdr.GetInt32(0)));
+            }
+
+            DB.CloseSqlConnection(conn, rdr);
+            return coursesInDept;
+        }
+
+        public List<Course> GetDepartmentCourses()
+        {
+            List<Course> coursesInDept = new List<Course> {};
+
+            SqlConnection conn = DB.Connection();
+            conn.Open();
+
+            SqlCommand cmd = new SqlCommand("SELECT * FROM courses WHERE dept_id = @DeptId;", conn);
+            cmd.Parameters.Add(new SqlParameter("@DeptId", this.GetId()));
 
             SqlDataReader rdr = cmd.ExecuteReader();
 
